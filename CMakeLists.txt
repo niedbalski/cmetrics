@@ -112,9 +112,9 @@ check_c_source_compiles("
 find_package(FLEX 2)
 find_package(BISON 3)
 
-if(FLEX_FOUND AND BISON_FOUND)
-    set(CMT_BUILD_PROMETHEUS_DECODER 1)
-endif()
+# if(FLEX_FOUND AND BISON_FOUND)
+#     set(CMT_BUILD_PROMETHEUS_DECODER 1)
+# endif()
 
 configure_file(
   "${PROJECT_SOURCE_DIR}/include/cmetrics/cmt_info.h.in"
