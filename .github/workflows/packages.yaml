@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - *
     # Any tag starting with 'v'
     tags:
       - 'v*'
