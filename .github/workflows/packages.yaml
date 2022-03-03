@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-aarch64-distro-packages:
+  build-distro-packages-arm64:
     runs-on: ubuntu-latest
     name: build arm64 packages
     strategy:
@@ -31,6 +31,7 @@ jobs:
             build-essential \
             cmake \
             file \
+            rpm \
             make 
             cmake .
             echo ${{ matrix.format }} | awk '{print toupper($0)}' | xargs -I{} cpack -G {}
@@ -42,7 +43,7 @@ jobs:
           path: |
             ./*.${{matrix.format}}
 
-  build-distro-packages:
+  build-distro-packages-amd64:
     name: build amd64 packages
     strategy:
       fail-fast: true
@@ -66,7 +67,9 @@ jobs:
 
   release:
     name: Create release and upload packages
-    needs: build-distro-packages
+    needs:
+      - build-distro-packages-amd64
+      - build-distro-packages-arm64
     runs-on: ubuntu-latest
     permissions:
       contents: write

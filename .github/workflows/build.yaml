@@ -48,7 +48,37 @@ jobs:
           cmake3 -DCMT_TESTS=on -DCMT_DEV=on .
           make
 
-  build-unix:
+  build-unix-arm64:
+    name: Build sources on arm64 for ${{ matrix.os }} - ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 48
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        compiler: [ gcc, clang ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: uraimo/run-on-arch-action@v2.1.1
+      - name: Build on ${{ matrix.os }} with ${{ matrix.compiler }}
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          run: |
+            apt-get update && \
+            apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            file \
+            make 
+            echo "CC = $CC, CXX = $CXX"
+            cmake -DCMT_TESTS=On .
+            make all
+            CTEST_OUTPUT_ON_FAILURE=1 make test
+        env:
+          CC: ${{ matrix.compiler }}
+
+  build-unix-amd64:
     name: Build sources on amd64 for ${{ matrix.os }} - ${{ matrix.compiler }}
     runs-on: ${{ matrix.os }}
     strategy:
