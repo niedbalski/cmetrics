@@ -26,6 +26,26 @@ jobs:
           arch: aarch64
           distro: ubuntu20.04
           run: |
+            apt-get update && \
+            apt-get install -y --no-install-recommends \
+            build-essential \
+            curl \
+            ca-certificates \
+            cmake \
+            make \
+            tar \
+            libssl-dev \
+            libsasl2-dev \
+            pkg-config \
+            libsystemd-dev \
+            zlib1g-dev \
+            libpq-dev \
+            postgresql-server-dev-all \
+            flex \
+            bison \
+            libyaml-dev \
+            && apt-get clean \
+            && rm -rf /var/lib/apt/lists/*
             cmake .
             echo ${{ matrix.format }} | awk '{print toupper($0)}' | xargs -I{} cpack -G {}
 
