@@ -71,12 +71,10 @@ jobs:
             cmake \
             file \
             make 
-            echo "CC = $CC, CXX = $CXX"
+            echo "CC = ${{ matrix.compiler }}, CXX = $CXX"
             cmake -DCMT_TESTS=On .
             make all
             CTEST_OUTPUT_ON_FAILURE=1 make test
-        env:
-          CC: ${{ matrix.compiler }}
 
   build-unix-amd64:
     name: Build sources on amd64 for ${{ matrix.os }} - ${{ matrix.compiler }}
