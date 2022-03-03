@@ -10,8 +10,33 @@ on:
   workflow_dispatch:
 
 jobs:
+  build-aarch64-distro-packages:
+    runs-on: ubuntu-latest
+    name: build arm64 packages
+    strategy:
+      fail-fast: true
+      matrix:
+        format: [ rpm, deb ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: uraimo/run-on-arch-action@v2
+        name: Build the ${{matrix.format}} packages
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          run: |
+            cmake .
+            echo ${{ matrix.format }} | awk '{print toupper($0)}' | xargs -I{} cpack -G {}
+
+      - name: Store the master package artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.format }}
+          path: |
+            ./*.${{matrix.format}}
+
   build-distro-packages:
-    name: build packages
+    name: build amd64 packages
     strategy:
       fail-fast: true
       matrix:
